@@ -121,10 +121,16 @@ function App() {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <header className="bg-red-600 text-white py-6 shadow-md">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold">Berita Terkini</h1>
-          <p className="text-sm">Portal berita harian Anda</p>
+      <header className="bg-white shadow-md sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <h1 className="text-2xl md:text-3xl font-bold text-red-600">Berita Terkini</h1>
+          <nav className="space-x-4 text-sm md:text-base font-medium text-gray-700">
+            <a href="#" className="hover:text-red-600 transition">Beranda</a>
+            <a href="#" className="hover:text-red-600 transition">Nasional</a>
+            <a href="#" className="hover:text-red-600 transition">Internasional</a>
+            <a href="#" className="hover:text-red-600 transition">Olahraga</a>
+            <a href="#" className="hover:text-red-600 transition">Teknologi</a>
+          </nav>
         </div>
       </header>
 
