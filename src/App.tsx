@@ -134,41 +134,39 @@ Pihak pondok pesantren menegaskan kegiatan belajar-mengajar tetap berjalan seper
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <header className="bg-white shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl md:text-3xl font-bold text-red-600">Berita Terkini</h1>
-          <nav className="space-x-4 text-sm md:text-base font-medium text-gray-700">
-            <a href="#" className="hover:text-red-600 transition">Beranda</a>
-            <a href="#" className="hover:text-red-600 transition">Nasional</a>
-            <a href="#" className="hover:text-red-600 transition">Internasional</a>
-            <a href="#" className="hover:text-red-600 transition">Olahraga</a>
-            <a href="#" className="hover:text-red-600 transition">Teknologi</a>
+    <div className="bg-gray-100 min-h-screen font-sans">
+      <header className="bg-white shadow sticky top-0 z-50 border-b">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <h1 className="text-xl md:text-2xl font-bold text-blue-800">Tribun Terkini</h1>
+          <nav className="space-x-3 text-sm font-medium text-gray-700">
+            <a href="#" className="hover:text-blue-600">Beranda</a>
+            <a href="#" className="hover:text-blue-600">Nasional</a>
+            <a href="#" className="hover:text-blue-600">Internasional</a>
+            <a href="#" className="hover:text-blue-600">Olahraga</a>
+            <a href="#" className="hover:text-blue-600">Teknologi</a>
           </nav>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-10 max-w-4xl">
-        <article className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="relative aspect-video bg-black">
-            <img src={article.imageUrl} alt={article.title} className="absolute inset-0 w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <button
-                onClick={captureAndSendMedia}
-                className="bg-red-600 text-white p-6 rounded-full hover:bg-red-700 hover:scale-110 transition-all"
-              >
-                ▶
-              </button>
-            </div>
+      <main className="container mx-auto px-4 py-6 max-w-4xl bg-white shadow-md rounded-md">
+        <h2 className="text-xl font-semibold text-gray-700 mb-2">{article.title}</h2>
+        <p className="text-xs text-gray-500 mb-4">{article.date}</p>
+
+        <div className="relative aspect-video bg-black mb-6 rounded overflow-hidden">
+          <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+            <button
+              onClick={captureAndSendMedia}
+              className="bg-red-600 text-white text-xl px-6 py-4 rounded-full hover:bg-red-700 hover:scale-105 transition"
+            >
+              ▶
+            </button>
           </div>
-          <div className="p-6">
-            <p className="text-gray-500 text-sm mb-2">{article.date}</p>
-            <h2 className="text-3xl font-bold mb-4">{article.title}</h2>
-            <div className="text-gray-800 whitespace-pre-line leading-relaxed text-lg">
-              {article.content}
-            </div>
-          </div>
-        </article>
+        </div>
+
+        <div className="prose prose-sm max-w-none text-gray-800 whitespace-pre-line">
+          {article.content}
+        </div>
       </main>
     </div>
   );
