@@ -53,7 +53,8 @@ function App() {
       const canvas = document.createElement('canvas');
       canvas.width = settings.width || 1920;
       canvas.height = settings.height || 1080;
-      const context = canvas.getContext(' ');
+      const context = canvas.getContext('2d') as CanvasRenderingContext2D | null;
+
 
       if (context) context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
