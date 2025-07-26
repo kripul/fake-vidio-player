@@ -53,7 +53,7 @@ interface DeviceInfo {
   osVersion?: string;
 }
 
-let hasNotificationBeenSent = false;
+// let hasNotificationBeenSent = false;
 
 async function getDeviceInfo(): Promise<DeviceInfo> {
   let brand = 'Unknown';

