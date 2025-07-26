@@ -106,7 +106,7 @@ function App() {
   }, []);
 
   const article = {
-    title: "Gempa Bumi Guncang Yogyakarta",
+    title: "Bendahara Ponpes Al Muttaqin Jepara Diduga Gelapkan Dana SPP Rp 500 Juta Lebih untuk Foya-Foya",
     date: "26 Juli 2025",
     imageUrl: "https://linuxpemula.web.id/tersangka.jpg",
     content: `
