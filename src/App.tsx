@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 /**
  * BSI-like Internet Banking Landing UI (static demo)
